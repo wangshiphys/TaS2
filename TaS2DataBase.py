@@ -7,24 +7,19 @@ import numpy as np
 
 
 __all__ = [
-    "COORDS_CELL",
-    "COORDS_STAR",
+    "COORDS_CELL", "COORDS_STAR",
 
-    "As_CELL",
-    "Bs_CELL",
-    "Rs_CELL",
+    "As_CELL", "Bs_CELL", "Rs_CELL",
 
-    "As_STAR",
-    "Bs_STAR",
-    "Rs_STAR",
+    "As_STAR", "Bs_STAR", "Rs_STAR",
 
-    "Gamma",
+    "Gamma", "Ms_CELL", "Ks_CELL", "Ms_STAR", "Ks_STAR",
 
-    "Ms_CELL",
-    "Ks_CELL",
+    "POINT_TYPE_A", "POINT_TYPE_B", "POINT_TYPE_C",
 
-    "Ms_STAR",
-    "Ks_STAR",
+    "BOND_TYPE_A", "BOND_TYPE_B", "BOND_TYPE_C",
+    "BOND_TYPE_D", "BOND_TYPE_E", "BOND_TYPE_F",
+    "BONDS_INTRA", "BONDS_INTER", "ALL_BONDS",
 
     "KPath",
 ]
@@ -35,12 +30,14 @@ COORDS_CELL = np.array([[0.0, 0.0]], dtype=np.float64)
 
 COORDS_STAR = np.array(
     [
-        # The central point of the David Star(DS)
+        # The central point of the David Star(DS), the index of this point is 0
         [0.0, 0.0],
-        # The inner loop six points of the DS
+        # The inner loop six points of the DS, the indices of these points are
+        # from 1 to 6 correspond to their order in this array
         [-0.5, -np.sqrt(3)/2], [0.5, -np.sqrt(3)/2], [1.0, 0.0],
         [0.5, np.sqrt(3)/2], [-0.5, np.sqrt(3)/2], [-1.0, 0.0],
-        # The outer loop six points of the DS
+        # The outer loop six points of the DS, the indices of these points
+        # are from 7 to 12 correspond to their order in this array
         [0.0, -np.sqrt(3)], [1.5, -np.sqrt(3)/2], [1.5, np.sqrt(3)/2],
         [0.0, np.sqrt(3)], [-1.5, np.sqrt(3)/2], [-1.5, -np.sqrt(3)/2]
     ],
@@ -93,6 +90,79 @@ Ks_CELL = np.dot(_coeffs, Bs_CELL) / 3
 Ks_STAR = np.dot(_coeffs, Bs_STAR) / 3
 
 del _coeffs
+################################################################################
+
+
+# Different types of points in the David-Star. The points belong to different
+# types are specified by their indices. See also `COORDS_STAR` for the indices
+# definition
+POINT_TYPE_A = (0, )
+POINT_TYPE_B = (1, 2, 3, 4, 5, 6)
+POINT_TYPE_C = (7, 8, 9, 10, 11, 12)
+
+# Different types of bonds in and between the David-Star.
+# The bonds are classified according to their length
+# The bonds are specified by two points and every points are specified by the
+# David-Star they belong and their indices in the David-Star
+BOND_TYPE_A = (
+    (((0, 0), 0), ((0, 0), 1)),
+    (((0, 0), 0), ((0, 0), 2)),
+    (((0, 0), 0), ((0, 0), 3)),
+    (((0, 0), 0), ((0, 0), 4)),
+    (((0, 0), 0), ((0, 0), 5)),
+    (((0, 0), 0), ((0, 0), 6)),
+)
+BOND_TYPE_B = (
+    (((0, 0), 1), ((0, 0), 2)),
+    (((0, 0), 2), ((0, 0), 3)),
+    (((0, 0), 3), ((0, 0), 4)),
+    (((0, 0), 4), ((0, 0), 5)),
+    (((0, 0), 5), ((0, 0), 6)),
+    (((0, 0), 6), ((0, 0), 1)),
+)
+BOND_TYPE_C = (
+    (((0, 0), 1), ((0, 0), 7)),
+    (((0, 0), 7), ((0, 0), 2)),
+    (((0, 0), 2), ((0, 0), 8)),
+    (((0, 0), 8), ((0, 0), 3)),
+    (((0, 0), 3), ((0, 0), 9)),
+    (((0, 0), 9), ((0, 0), 4)),
+    (((0, 0), 4), ((0, 0), 10)),
+    (((0, 0), 10), ((0, 0), 5)),
+    (((0, 0), 5), ((0, 0), 11)),
+    (((0, 0), 11), ((0, 0), 6)),
+    (((0, 0), 6), ((0, 0), 12)),
+    (((0, 0), 12), ((0, 0), 1)),
+)
+BOND_TYPE_D = (
+    (((0, 0), 9), ((1, 0), 12)),
+    (((0, 0), 10), ((0, 1), 7)),
+    (((0, 0), 11), ((-1, 1), 8)),
+)
+BOND_TYPE_E = (
+    (((0, 0), 8), ((1, 0), 12)),
+    (((0, 0), 9), ((1, 0), 11)),
+    (((0, 0), 9), ((0, 1), 7)),
+    (((0, 0), 10), ((0, 1), 12)),
+    (((0, 0), 10), ((-1, 1), 8)),
+    (((0, 0), 11), ((-1, 1), 7)),
+)
+BOND_TYPE_F = (
+    (((0, 0), 3), ((1, 0), 12)),
+    (((0, 0), 9), ((1, 0), 6)),
+    (((0, 0), 4), ((0, 1), 7)),
+    (((0, 0), 10), ((0, 1), 1)),
+    (((0, 0), 5), ((-1, 1), 8)),
+    (((0, 0), 11), ((-1, 1), 2)),
+)
+
+# Bonds intra and inter the David-Star
+BONDS_INTRA = (BOND_TYPE_A, BOND_TYPE_B, BOND_TYPE_C)
+BONDS_INTER = (BOND_TYPE_D, BOND_TYPE_E, BOND_TYPE_F)
+ALL_BONDS = (
+    BOND_TYPE_A, BOND_TYPE_B, BOND_TYPE_C,
+    BOND_TYPE_D, BOND_TYPE_E, BOND_TYPE_F,
+)
 ################################################################################
 
 
@@ -181,5 +251,3 @@ if __name__ == "__main__":
     ax1.set_xticklabels(labels)
     ax1.grid(axis="both")
     plt.show()
-
-
