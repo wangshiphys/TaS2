@@ -1,5 +1,6 @@
 """
-An illustration of commensurate/incommensurate in 1D
+A demonstration of commensurate/incommensurate in 1D for two periodical
+system
 """
 
 
@@ -20,7 +21,7 @@ ys1 = np.cos(2 * np.pi * alphas / 1.5)
 ys2 = np.cos(2 * np.pi * alphas / np.sqrt(3))
 
 fig, axes = plt.subplots(3, 1, sharex=True)
-titles = [r"$R_2=1$", r"$R_2=\frac{3}{2}$", r"$R_2=\sqrt{3}$"]
+titles = [r"$R_2=1$", r"$R_2=3/2$", r"$R_2=\sqrt{3}$"]
 for ax, ys, title in zip(axes, [ys0, ys1, ys2], titles):
     ax.plot(alphas, ys, lw=line_width)
     ax.plot(xs, [0]*len(xs), marker="o", ls="", ms=marker_size)
@@ -28,5 +29,5 @@ for ax, ys, title in zip(axes, [ys0, ys1, ys2], titles):
     ax.set_title(title, fontsize="x-large")
 fig.suptitle("Commensurate/Incommensurate", fontsize="xx-large")
 plt.show()
-fig.savefig("ShowCommensurate.jpg", dpi=1000)
+fig.savefig("demo/ShowCommensurate.jpg", dpi=1000)
 plt.close("all")
