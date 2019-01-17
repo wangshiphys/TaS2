@@ -1,5 +1,5 @@
 """
-An illustration of our David-Star tight-binding model
+A demonstration of our David-Star tight-binding model
 """
 
 
@@ -13,7 +13,7 @@ line_width = 2
 marker_size = 25
 font_size = "xx-large"
 color_map = plt.get_cmap("tab10")
-colors = color_map(range(color_map.N))
+colors = color_map(range(color_map.N))[[0, 1, 2, 3, -2, -1]]
 
 shrink_inner, shrink_outer = 0.2, 0.1
 # shrink_inner, shrink_outer = 0.00, 0.00
@@ -24,9 +24,9 @@ coords_star[1:7, :] *= (1 - shrink_inner)
 coords_star[7:, :] *= (1 - shrink_outer)
 
 legend_handles = []
-hopping = r"$C_{i\sigma}^{\dag}C_{j\sigma}$"
+hopping = r"$c_{i\sigma}^{\dag}c_{j\sigma}$"
 legend_labels = ["$t_{0}$".format(i) + hopping for i in range(6)]
-line_styles = ["dashed", "dashed", "dashed", "dotted", "dotted", "dotted"]
+line_styles = ["solid"] * 3 + ["dotted"] * 3
 log_template = "Bond: (p0=(({0:>2d}, {1:>2d}), {2:>2d}), " \
                "p1=(({3:>2d}, {4:>2d}), {5:>2d})), Length = {6:.8f}"
 
@@ -38,7 +38,7 @@ for bonds, line_style, color in zip(ALL_BONDS, line_styles, colors):
         length = np.linalg.norm(p0 - p1)
         line, = ax.plot(
             (p0[0], p1[0]), (p0[1], p1[1]),
-            color=color, lw=line_width, ls=line_style
+            color=color, lw=line_width, ls=line_style,
         )
         print(log_template.format(*v0, index0, *v1, index1, length))
     print("=" * 80, flush=True)
@@ -69,10 +69,10 @@ for translation in [(0, 0), (1, 0), (0, 1), (-1, 1)]:
         )
 
 ax.set_title(
-    "Demonstration of David-Star Tight-Binding Model", fontsize=font_size
+    "Demonstration of the David-Star Tight-Binding Model", fontsize=font_size
 )
 ax.set_aspect("equal")
 ax.set_axis_off()
 plt.show()
-fig.savefig("David-Star Tight-Binding Model.jpg", dpi=1000)
+fig.savefig("demo/David-Star Tight-Binding Model.jpg", dpi=1000)
 plt.close("all")
