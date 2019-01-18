@@ -1,5 +1,24 @@
 """
 A demonstration of our David-Star tight-binding model
+
+The David-Star tight-binding model was proposed to simulate the properties of
+the commensurate charge-density-wave(CCDW) phase of 1T-TaS2. At low
+temperatures, 1T-TaS2 undergoes a commensurate reconstruction into a
+David-Star unit cell containing 13 Ta atoms. There are three inequivalent
+types of Ta atoms in the David-Star designated as "a", "b" and "c"(In this
+script, the three types of Ta atoms are represented by three different
+colors: "red", "orange" and "green"). The David-Stars are centered on atoms
+of type "a" and characterized by a shrinkage of the ab, bc and ac
+inter-atomic distances by 6.4, 3.2 and 4.28%, respectively.
+
+After the reconstruction, the original nearest-neighbor bonds are of
+different length, so does the hopping coefficients. There are two kinds of
+bond length within the David-Stars and three kinds between the
+nearest-neighbor David-Stars. We also treat the center Ta atoms specially,
+so hoppings on the "ab" bonds are taken to be different from that on the
+"bb" bonds. The hopping coefficients for the six types of bonds are t0, t1,
+t2, t3, t4, t5 respectively. See also the `TaS2DataBase` module for the
+definition of the different types of bond.
 """
 
 
