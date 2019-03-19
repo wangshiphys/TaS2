@@ -246,10 +246,8 @@ class StarOfDavidTBSolver(BaseTBSolver):
                 length=TICK_LENGTH, width=TICK_WIDTH, labelsize=LABEL_SIZE
             )
 
-        axes[0].set_xlabel("EB", fontsize=LABEL_SIZE)
-        for ax, xlabel in zip(axes[1:], ["DOS", "LDOS-A", "LDOS-B", "LDOS-C"]):
-            ax.tick_params(labelbottom=True)
-            ax.set_xlabel(xlabel, fontsize=LABEL_SIZE)
+        for ax, label in zip(axes, ["EB", "DOS", "LDOS-A", "LDOS-B", "LDOS-C"]):
+            ax.set_xlabel(label, fontsize=LABEL_SIZE)
         axes[2].text(
             0.5, 0.55, "$E_F={0:.3f}$".format(mu),
             ha="center", va="center",
@@ -261,7 +259,7 @@ class StarOfDavidTBSolver(BaseTBSolver):
 
 
 if __name__ == "__main__":
-    kwargs = {
+    model_params = {
         "t0": 0.2,
         "t1": 0.2,
         "t2": 0.8,
@@ -274,7 +272,7 @@ if __name__ == "__main__":
     }
     Solver = StarOfDavidTBSolver(numkx=100)
     Solver.Verify()
-    Solver.VisualizeDOS(**kwargs)
+    Solver.VisualizeDOS(**model_params)
     Solver()
-    Solver(**kwargs)
-    Solver(**kwargs)
+    Solver(**model_params)
+    Solver(**model_params)
