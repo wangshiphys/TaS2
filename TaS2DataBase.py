@@ -3,9 +3,6 @@ Some commonly used data of this project
 """
 
 
-from collections import OrderedDict
-
-import matplotlib.pyplot as plt
 import numpy as np
 
 
