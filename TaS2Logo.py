@@ -21,9 +21,9 @@ coords_star[1:7, :] *= (1 - shrink_inner)
 coords_star[7:, :] *= (1 - shrink_outer)
 
 fig, ax = plt.subplots()
-fig.set_size_inches(6, 2)
+fig.set_size_inches(4, 2)
 fig.subplots_adjust(
-    top=1.0, bottom=0.0, left=0.02, right=0.3, hspace=0.2, wspace=0.2
+    top=1.0, bottom=0.0, left=0.0, right=0.4, hspace=0.2, wspace=0.2
 )
 # Plot the intra-cluster bonds
 for bonds, color in zip(BONDS_INTRA, COLORS[3:6]):
@@ -44,12 +44,12 @@ ax.plot(
     color=COLORS[2], marker="o", ls="", ms=MARKER_SIZE,
 )
 ax.text(
-    1.1, 0.5, r"$1T-TaS_2$", fontsize=FONT_SIZE,
+    1.3, 0.5, r"$TaS_2$", fontsize=FONT_SIZE,
     ha="left", va="center", transform=ax.transAxes
 )
 
 ax.set_aspect("equal")
 ax.set_axis_off()
 plt.show()
-fig.savefig("icons/1T-TaS2Logo.svg")
+fig.savefig("icons/TaS2Logo.svg")
 plt.close("all")
