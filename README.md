@@ -1,5 +1,3 @@
-# Theoretic simulation of the STM results of the 1T-TaS2
+# <img alt="1T-TaS2" src="icons/1T-TaS2Logo.svg" height="60">
 
-## CPT studies of the simple Hubbard model on triangle lattice
-
-## Our proposal of the possible Tight-binding model
+Theoretical simulation of the 1T-TaS2 in Commensurate Charge-Density-Wave(CCDW) state.
