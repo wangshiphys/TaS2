@@ -133,13 +133,14 @@ class SevenOrbitTBSolver(BaseTBSolver):
                 mu_c, t_sc, t_ss1, t_ss2, t_ss3, t_ss4, t_ss5, t_ss6
         """
 
-        mu, avg_electron_nums = self.AverageElectronNumber(**model_params)
+        GE, mu, avg_electron_nums = self.AverageElectronNumber(**model_params)
         omegas, projected_dos = self.DOS(gamma=gamma, **model_params)
         global_dos = np.sum(projected_dos, axis=-1)
 
         msg0 = "The averaged number of electron per unit-cell: {0}"
         msg1 = "The averaged number of electron on the {0}th orbit: {1}"
         print("The chemical potential: {0}".format(mu))
+        print("The ground state energy per Star-of-David: {0}".format(GE))
         print(msg0.format(np.sum(avg_electron_nums)))
         for index, avg_electron_num in enumerate(avg_electron_nums):
             print(msg1.format(index, avg_electron_num))

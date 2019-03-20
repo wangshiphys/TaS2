@@ -205,13 +205,14 @@ class StarOfDavidTBSolver(BaseTBSolver):
                 t0, t1, t2, t3, t4, t5, m0, mu1, mu2
         """
 
-        mu, avg_electron_nums = self.AverageElectronNumber(**model_params)
+        GE, mu, avg_electron_nums = self.AverageElectronNumber(**model_params)
         omegas, projected_dos = self.DOS(gamma=gamma, **model_params)
         global_dos = np.sum(projected_dos, axis=-1)
 
         msg0 = "The averaged number of electron per Star-of-David: {0}"
         msg1 = "The averaged number of electron on the {0:2d}th Ta atom: {1}"
         print("The chemical potential: {0}".format(mu))
+        print("The ground state energy per Star-of-David: {0}".format(GE))
         print(msg0.format(np.sum(avg_electron_nums)))
         for index, avg_electron_num in enumerate(avg_electron_nums):
             print(msg1.format(index, avg_electron_num))
@@ -255,7 +256,7 @@ if __name__ == "__main__":
         "mu1": -0.6,
         "mu2": -0.1,
     }
-    Solver = StarOfDavidTBSolver(numkx=100)
+    Solver = StarOfDavidTBSolver(e_num=6, numkx=1)
     Solver.Verify()
     Solver.VisualizeDOS(**model_params)
     Solver()

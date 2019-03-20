@@ -449,6 +449,8 @@ class BaseTBSolver:
 
         Returns
         -------
+        GE : float
+            The ground state energy per Star-of-David of the system
         mu : float
             The chemical potential
         avg_electron_nums : array
@@ -458,6 +460,7 @@ class BaseTBSolver:
         self._TypicalSolver(**model_params)
         kth = self._total_electron_num // 2
         partition_indices = np.argpartition(self._BZMeshEs, kth=[kth-1, kth])
+        GE = 2 * np.sum(self._BZMeshEs[partition_indices[0:kth]])
         avg_electron_nums = 2 * np.sum(
             self._BZMeshProbs[partition_indices[0:kth]], axis=0
         )
@@ -466,8 +469,10 @@ class BaseTBSolver:
         if self._total_electron_num % 2:
             mu = self._BZMeshEs[partition_indices[kth]]
             avg_electron_nums += self._BZMeshProbs[partition_indices[kth]]
+            GE += mu
         else:
             index0, index1 = partition_indices[kth-1:kth+1]
             mu = (self._BZMeshEs[index0] + self._BZMeshEs[index1]) / 2
+        GE /= (self._numkx * self._numky)
         avg_electron_nums /= (self._numkx * self._numky)
-        return mu, avg_electron_nums
+        return GE, mu, avg_electron_nums
