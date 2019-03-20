@@ -10,7 +10,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from TaS2DataBase import *
-from PlotProperties import *
+
+
+LINE_WIDTH = 3
+color_map = plt.get_cmap("tab10")
+COLORS = color_map(range(color_map.N))
 
 
 class StarOfDavidTBSolver(BaseTBSolver):
@@ -128,10 +132,8 @@ class StarOfDavidTBSolver(BaseTBSolver):
 
         ax.set_xlim(0, len(Es_Cell) - 1)
         ax.set_xticks(GMKGIndices)
-        ax.set_xticklabels(GMKGLabels, fontsize=LABEL_SIZE)
-        ax.set_ylabel(
-            r"$E$", fontsize=LABEL_SIZE, rotation="horizontal", labelpad=15
-        )
+        ax.set_xticklabels(GMKGLabels)
+        ax.set_ylabel(r"$E$", rotation="horizontal")
         ax.grid(axis="both", linestyle="dashed")
         plt.show()
         plt.close("all")
@@ -183,15 +185,8 @@ class StarOfDavidTBSolver(BaseTBSolver):
         axes[0, 0].set_xlim(omegas[0], omegas[-1])
         axes[0, 0].legend(
             [line0, line1, line2, line3], ["DOS", "LDOS-A", "LDOS-B", "LDOS-C"],
-            loc="best", fontsize=LABEL_SIZE
+            loc="best"
         )
-        for ax in axes.flat:
-            for which, spine in ax.spines.items():
-                spine.set_linewidth(SPINE_WIDTH)
-            ax.tick_params(
-                axis="both", which="both",
-                length=TICK_LENGTH, width=TICK_WIDTH, labelsize=LABEL_SIZE
-            )
         plt.show()
         plt.close("all")
 
@@ -227,9 +222,7 @@ class StarOfDavidTBSolver(BaseTBSolver):
         axes[0].set_ylim(omegas[0], omegas[-1])
         axes[0].set_xticks(self._GMKGIndices)
         axes[0].set_xticklabels(self._GMKGLabels)
-        axes[0].set_ylabel(
-            r"$E$", fontsize=LABEL_SIZE, rotation="horizontal", labelpad=15
-        )
+        axes[0].set_ylabel(r"$E$", rotation="horizontal")
         axes[0].grid(axis="x", ls="dashed", lw=LINE_WIDTH/4)
 
         axes[1].plot(global_dos, omegas, lw=LINE_WIDTH)
@@ -237,22 +230,14 @@ class StarOfDavidTBSolver(BaseTBSolver):
         axes[3].plot(projected_dos[:, 1], omegas, lw=LINE_WIDTH)
         axes[4].plot(projected_dos[:, 7], omegas, lw=LINE_WIDTH)
 
-        for ax in axes:
-            ax.axhline(mu, ls="dashed", lw=LINE_WIDTH/2, color="gray")
-            for which, spine in ax.spines.items():
-                spine.set_linewidth(SPINE_WIDTH)
-            ax.tick_params(
-                axis="both", which="both",
-                length=TICK_LENGTH, width=TICK_WIDTH, labelsize=LABEL_SIZE
-            )
-
         for ax, label in zip(axes, ["EB", "DOS", "LDOS-A", "LDOS-B", "LDOS-C"]):
-            ax.set_xlabel(label, fontsize=LABEL_SIZE)
-        axes[2].text(
-            0.5, 0.55, "$E_F={0:.3f}$".format(mu),
-            ha="center", va="center",
-            transform=axes[2].transAxes, fontsize=FONT_SIZE
-        )
+            ax.axhline(mu, ls="dashed", lw=LINE_WIDTH/2, color="gray")
+            ax.set_xlabel(label)
+        # axes[2].text(
+        #     0.5, 0.55, "$E_F={0:.3f}$".format(mu),
+        #     ha="center", va="center",
+        #     transform=axes[2].transAxes,
+        # )
 
         plt.show()
         plt.close("all")
