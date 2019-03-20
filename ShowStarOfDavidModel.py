@@ -26,7 +26,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from TaS2DataBase import As_STAR, COORDS_STAR, BONDS_INTRA, BONDS_INTER
-from TaS2DataBase import LINE_WIDTH, MARKER_SIZE, FONT_SIZE, COLORS, FIG_DPI
+
+
+color_map = plt.get_cmap("tab10")
+COLORS = color_map(range(color_map.N))
 
 
 # For demonstration
@@ -64,12 +67,12 @@ for bonds, color in zip(BONDS_INTRA, COLORS[3:6]):
         end = coords_star[index1]
         length = np.linalg.norm(end - start)
         bond = np.array([start, end]) + np.dot([0, 0], As_STAR)
-        line, = ax.plot(bond[:, 0], bond[:, 1], color=color, lw=LINE_WIDTH)
+        line, = ax.plot(bond[:, 0], bond[:, 1], color=color)
         print(log_template.format(*v0, index0, *v1, index1, length))
 
         # The equivalent bond in the adjacent cluster
         bond = np.array([start, end]) + np.dot([1, 0], As_STAR)
-        ax.plot(bond[:, 0], bond[:, 1], color=color, lw=LINE_WIDTH)
+        ax.plot(bond[:, 0], bond[:, 1], color=color)
     print("=" * 80, flush=True)
     # Save the representative bond of this type
     legend_handles.append(line)
@@ -83,7 +86,7 @@ for bonds, color in zip(BONDS_INTER, COLORS[6:9]):
             length = np.linalg.norm(p0 - p1)
             line, = ax.plot(
                 (p0[0], p1[0]), (p0[1], p1[1]),
-                color=color, lw=LINE_WIDTH, ls="dotted",
+                color=color, ls="dotted",
             )
             print(log_template.format(*v0, index0, *v1, index1, length))
     print("=" * 80, flush=True)
@@ -95,28 +98,27 @@ for translation in [(0, 0), (1, 0)]:
     points = coords_star + np.dot(translation, As_STAR)
     p0, = ax.plot(
         points[0, 0], points[0, 1],
-        color=COLORS[0], marker="o", ls="", ms=MARKER_SIZE,
+        color=COLORS[0], marker="o", ls="",
     )
     p1, = ax.plot(
         points[1:7, 0], points[1:7, 1],
-        color=COLORS[1], marker="o", ls="", ms=MARKER_SIZE,
+        color=COLORS[1], marker="o", ls="",
     )
     p2, = ax.plot(
         points[7:, 0], points[7:, 1],
-        color=COLORS[2], marker="o", ls="", ms=MARKER_SIZE,
+        color=COLORS[2], marker="o", ls="",
     )
 
 legend_handles  += [p0, p1, p2]
 legend_labels = hopping_labels + mu_labels
 ax.legend(
-    legend_handles, legend_labels, loc="best", fontsize=FONT_SIZE,
+    legend_handles, legend_labels, loc="best",
     ncol=3, markerscale=0.5, framealpha=0.5, shadow=True,
     borderpad=0.1, borderaxespad=0.1,
     labelspacing=0.0, handlelength=1.2,
     handletextpad=0.2, columnspacing=0.2,
 )
 
-# ax.set_title("Star-of-David Tight-Binding Model", fontsize=FONT_SIZE)
 # ax.text(
 #     1, 1, "(a)", ha="right", va="top",
 #     transform=ax.transAxes, fontsize=FONT_SIZE
@@ -125,5 +127,5 @@ ax.legend(
 ax.set_aspect("equal")
 ax.set_axis_off()
 plt.show()
-fig.savefig("demo/Star-of-David Tight-Binding Model.jpg", dpi=FIG_DPI)
+fig.savefig("demo/Star-of-David Tight-Binding Model.jpg")
 plt.close("all")
