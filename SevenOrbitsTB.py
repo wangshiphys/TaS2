@@ -10,8 +10,11 @@ See also:
 import matplotlib.pyplot as plt
 import numpy as np
 
-from PlotProperties import *
 from TaS2DataBase import *
+
+
+color_map = plt.get_cmap("tab10")
+COLORS = color_map(range(color_map.N))
 
 
 class SevenOrbitTBSolver(BaseTBSolver):
@@ -101,34 +104,17 @@ class SevenOrbitTBSolver(BaseTBSolver):
         global_dos = np.sum(projected_dos, axis=-1)
 
         fig, axes = plt.subplots(1, 3, sharex=True)
-        line0, = axes[0].plot(
-            omegas, global_dos, lw=LINE_WIDTH, color=COLORS[0]
-        )
-        line1, = axes[0].plot(
-            omegas, projected_dos[:, 0], lw=LINE_WIDTH, color=COLORS[1]
-        )
+        line0, = axes[0].plot(omegas, global_dos, color=COLORS[0])
+        line1, = axes[0].plot(omegas, projected_dos[:, 0], color=COLORS[1])
         line2, = axes[0].plot(
-            omegas, np.sum(projected_dos[:, 1:], axis=-1),
-            lw=LINE_WIDTH, color=COLORS[2]
+            omegas, np.sum(projected_dos[:, 1:], axis=-1), color=COLORS[2]
         )
-        axes[1].plot(
-            omegas, projected_dos[:, 0], lw=LINE_WIDTH, color=COLORS[1]
-        )
-        axes[2].plot(
-            omegas, projected_dos[:, 1], lw=LINE_WIDTH, color=COLORS[2]
-        )
+        axes[1].plot(omegas, projected_dos[:, 0], color=COLORS[1])
+        axes[2].plot(omegas, projected_dos[:, 1], color=COLORS[2])
         axes[0].set_xlim(omegas[0], omegas[-1])
         axes[0].legend(
-            [line0, line1, line2], ["DOS", "DOS-C", "DOS-S"],
-            loc="best", fontsize=LABEL_SIZE
+            [line0, line1, line2], ["DOS", "DOS-C", "DOS-S"], loc="best"
         )
-        for ax in axes:
-            for which, spine in ax.spines.items():
-                spine.set_linewidth(SPINE_WIDTH)
-            ax.tick_params(
-                axis="both", which="both",
-                length=TICK_LENGTH, width=TICK_WIDTH, labelsize=LABEL_SIZE
-            )
         plt.show()
         plt.close("all")
 
@@ -159,33 +145,24 @@ class SevenOrbitTBSolver(BaseTBSolver):
             print(msg1.format(index, avg_electron_num))
 
         fig, axes = plt.subplots(1, 4, sharey=True)
-        axes[0].plot(self._GMKGPathEs, lw=LINE_WIDTH)
+        axes[0].plot(self._GMKGPathEs)
         axes[0].set_xlim(0, len(self._GMKGPathEs) - 1)
         axes[0].set_ylim(omegas[0], omegas[-1])
         axes[0].set_xticks(self._GMKGIndices)
         axes[0].set_xticklabels(self._GMKGLabels)
-        axes[0].set_ylabel(
-            r"$E$", fontsize=LABEL_SIZE, rotation="horizontal", labelpad=15
-        )
-        axes[0].grid(axis="x", ls="dashed", lw=LINE_WIDTH/4)
+        axes[0].set_ylabel(r"$E$", rotation="horizontal")
+        axes[0].grid(axis="x", ls="dashed")
 
-        axes[1].plot(global_dos, omegas, lw=LINE_WIDTH)
-        axes[2].plot(projected_dos[:, 0], omegas, lw=LINE_WIDTH)
-        axes[3].plot(projected_dos[:, 1], omegas, lw=LINE_WIDTH)
+        axes[1].plot(global_dos, omegas)
+        axes[2].plot(projected_dos[:, 0], omegas)
+        axes[3].plot(projected_dos[:, 1], omegas)
 
         for ax, label in zip(axes, ["EB", "DOS", "DOS-C", "DOS-S"]):
-            ax.set_xlabel(label, fontsize=LABEL_SIZE)
-            ax.axhline(mu, ls="dashed", lw=LINE_WIDTH/2, color="gray")
-            for which, spine in ax.spines.items():
-                spine.set_linewidth(SPINE_WIDTH)
-            ax.tick_params(
-                axis="both", which="both",
-                length=TICK_LENGTH, width=TICK_WIDTH, labelsize=LABEL_SIZE
-            )
+            ax.set_xlabel(label)
+            ax.axhline(mu, ls="dashed", color="gray")
         axes[2].text(
             0.5, 0.55, "$E_F={0:.3f}$".format(mu),
-            ha="center", va="center",
-            transform=axes[2].transAxes, fontsize=FONT_SIZE
+            ha="center", va="center", transform=axes[2].transAxes
         )
         plt.show()
         plt.close("all")
