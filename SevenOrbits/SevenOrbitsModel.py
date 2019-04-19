@@ -13,6 +13,7 @@ from HamiltonianPy import AoC, ANNIHILATION, CREATION, SPIN_DOWN, SPIN_UP
 __all__ = [
     "ORBITS", "ORBIT_NUM",
     "SPINS", "SPIN_NUM",
+    "STATE_NUM",
     "OnSiteInteraction",
     "HoppingTerms",
     "HTermGenerator",
@@ -20,10 +21,12 @@ __all__ = [
 
 
 # All possible orbits and spin-flavors on a lattice site
+# The number of single-particle state on a lattice site
 ORBITS = (0, 1, 2, 3, 4, 5, 6)
 SPINS = (SPIN_DOWN, SPIN_UP)
 ORBIT_NUM = len(ORBITS)
 SPIN_NUM = len(SPINS)
+STATE_NUM = ORBIT_NUM * SPIN_NUM
 
 
 # Global variables that describe the hopping and interaction terms
