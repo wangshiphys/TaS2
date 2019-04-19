@@ -10,7 +10,6 @@ from itertools import product
 
 from HamiltonianPy import AoC, ANNIHILATION, CREATION, SPIN_DOWN, SPIN_UP
 
-
 __all__ = [
     "ORBITS", "ORBIT_NUM",
     "SPINS", "SPIN_NUM",
@@ -27,11 +26,13 @@ ORBIT_NUM = len(ORBITS)
 SPIN_NUM = len(SPINS)
 
 
-# Global variables that describe the hopping terms between different orbits
+# Global variables that describe the hopping and interaction terms
 # The integer numbers are the indices of these orbits
 ONSITE_TERMS = {
     "Muc": [(0, 0)],
+    # Hubbard interaction for electrons on the 0th orbit
     "Uc": [(0, 0)],
+    # Coulomb interaction for electrons on different orbits
     "Usc": [(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6)],
     "tsc": [(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6)],
     "tss1": [(1, 4), (2, 5), (3, 6)],
@@ -128,6 +129,22 @@ def NumberOperator(site, spin=0, orbit=0):
 def OnSiteInteraction(cluster, **model_params):
     """
     Generate on-site interaction terms
+
+    Current implemented terms:
+      1. The Hubbard interaction for electrons on the 0th orbit |0>;
+      2. The Coulomb interaction between electrons on the 0th orbit and other
+      six orbits.
+
+    Parameters
+    ----------
+    cluster : Lattice
+        The lattice based on which this model is defined
+    model_params : Necessary model parameters
+
+    Returns
+    -------
+    terms : list of ParticleTerm
+        A collection of on-site interaction terms
     """
 
     terms = []
@@ -155,6 +172,26 @@ def OnSiteInteraction(cluster, **model_params):
 def HoppingTerms(cluster, **model_params):
     """
     Generate hopping terms
+
+    Current implemented terms:
+      1. The on-site chemical potential term on the 0th orbit;
+      2. The on-site hopping terms between the 0th orbit and other six orbits;
+      3. Three types of on-site hopping terms between the six extended orbits;
+      4. Three types of inter-site hopping terms between the six extended
+      orbits.
+
+    Parameters
+    ----------
+    cluster : Lattice
+        The lattice based on which this model is defined
+    model_params : Necessary model parameters
+
+    Returns
+    -------
+    terms_intra : list of ParticleTerm
+        A collection of hopping terms intra the cluster
+    terms_inter : list of ParticleTerm
+        A collection of hopping terms between the cluster
     """
 
     hopping_terms_intra = []
@@ -198,19 +235,35 @@ def HoppingTerms(cluster, **model_params):
 def HTermGenerator(cluster, **model_params):
     """
     Generate terms of the model Hamiltonian
+
+    Current implemented terms:
+      See the documents of the `OnSiteInteraction` and `HoppingTerms`
+
+    Parameters
+    ----------
+    cluster : Lattice
+        The lattice based on which this model is defined
+    model_params : Necessary model parameters
+
+    Returns
+    -------
+    terms_interaction : list of ParticleTerm
+        A collection of on-site interaction terms
+    terms_intra : list of ParticleTerm
+        A collection of hopping terms intra the cluster
+    terms_inter : list of ParticleTerm
+        A collection of hopping terms between the cluster
     """
 
-    interaction_terms = OnSiteInteraction(cluster, **model_params)
-    hopping_terms_intra, hopping_terms_inter = HoppingTerms(
-        cluster, **model_params
-    )
-    return interaction_terms, hopping_terms_intra, hopping_terms_inter
+    terms_interaction = OnSiteInteraction(cluster, **model_params)
+    terms_intra, terms_inter = HoppingTerms(cluster, **model_params)
+    return terms_interaction, terms_intra, terms_inter
 
 
 if __name__ == "__main__":
     from HamiltonianPy import lattice_generator
-    cluster = lattice_generator("triangle", num0=1, num1=1)
+    cluster = lattice_generator("triangle", num0=2, num1=2)
     interactions, intra, inter = HTermGenerator(cluster, Uc=1.0, Usc=0.5)
-    assert len(interactions) == 25
-    assert len(intra) == 44
-    assert len(inter) == 24
+    assert len(interactions) == 100
+    assert len(intra) == 216
+    assert len(inter) == 56
