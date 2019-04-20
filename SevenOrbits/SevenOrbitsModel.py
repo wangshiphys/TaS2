@@ -35,6 +35,8 @@ ONSITE_TERMS = {
     "Muc": [(0, 0)],
     # Hubbard interaction for electrons on the 0th orbit
     "Uc": [(0, 0)],
+    # Hubbard interaction for electrons on the six extended orbits
+    "Us": [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6)],
     # Coulomb interaction for electrons on different orbits
     "Usc": [(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6)],
     "tsc": [(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6)],
@@ -67,9 +69,10 @@ INTER_TERMS = {
 # Default model parameters
 DEFAULT_MODEL_PARAMS = {
     "Muc": 0.212,
-    "tsc": 0.162,
     "Uc": 0.0,
+    "Us": 0.0,
     "Usc": 0.0,
+    "tsc": 0.162,
     "tss1": 0.150,
     "tss2": 0.091,
     "tss3": 0.072,
@@ -89,7 +92,7 @@ def update_parameters(**model_params):
     ----------
     model_params: model parameters
         Currently recognized keyword arguments are:
-          Muc, tsc, Uc, Usc, tss1, tss2, tss3, tss4, tss5, tss6
+          Muc, Uc, Us, Usc, tsc, tss1, tss2, tss3, tss4, tss5, tss6
 
     Returns
     -------
@@ -136,7 +139,8 @@ def OnSiteInteraction(cluster, **model_params):
     Current implemented terms:
       1. The Hubbard interaction for electrons on the 0th orbit |0>;
       2. The Coulomb interaction between electrons on the 0th orbit and other
-      six orbits.
+      six orbits;
+      3. The Hubbard interaction for electrons on the six extended orbits;
 
     Parameters
     ----------
@@ -152,7 +156,7 @@ def OnSiteInteraction(cluster, **model_params):
 
     terms = []
     model_params = update_parameters(**model_params)
-    for key in ["Uc", "Usc"]:
+    for key in ["Uc", "Us", "Usc"]:
         coeff = model_params[key] / 2.0
         if coeff == 0.0:
             continue
@@ -266,7 +270,9 @@ def HTermGenerator(cluster, **model_params):
 if __name__ == "__main__":
     from HamiltonianPy import lattice_generator
     cluster = lattice_generator("triangle", num0=2, num1=2)
-    interactions, intra, inter = HTermGenerator(cluster, Uc=1.0, Usc=0.5)
-    assert len(interactions) == 100
+    interactions, intra, inter = HTermGenerator(
+        cluster, Uc=1.0, Us=0.7, Usc=0.5
+    )
+    assert len(interactions) == 100 + 6 * 4
     assert len(intra) == 216
     assert len(inter) == 56
