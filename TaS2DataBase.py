@@ -4,7 +4,7 @@ Some commonly used data of this project
 
 
 import numpy as np
-
+from HamiltonianPy import KPath
 
 __all__ = [
     "COORDS_CELL", "COORDS_STAR",
@@ -15,13 +15,7 @@ __all__ = [
 
     "Gamma", "Ms_CELL", "Ks_CELL", "Ms_STAR", "Ks_STAR",
 
-    "POINT_TYPE_A", "POINT_TYPE_B", "POINT_TYPE_C",
-
-    "BOND_TYPE_A", "BOND_TYPE_B", "BOND_TYPE_C",
-    "BOND_TYPE_D", "BOND_TYPE_E", "BOND_TYPE_F",
-    "BONDS_INTRA", "BONDS_INTER", "ALL_BONDS",
-
-    "KPath", "Lorentzian", "BaseTBSolver",
+    "Lorentzian", "BaseTBSolver",
 ]
 
 
@@ -91,143 +85,6 @@ Ks_STAR = np.dot(_coeffs, Bs_STAR) / 3
 
 del _coeffs
 ################################################################################
-
-
-# Different types of points in the David-Star. The points belong to different
-# types are specified by their indices. See also `COORDS_STAR` for the indices
-# definition
-POINT_TYPE_A = (0, )
-POINT_TYPE_B = (1, 2, 3, 4, 5, 6)
-POINT_TYPE_C = (7, 8, 9, 10, 11, 12)
-
-# Different types of bonds in and between the David-Star.
-# The bonds are classified according to their length
-# The bonds are specified by two points and every points are specified by the
-# David-Star they belong and their indices in the David-Star
-BOND_TYPE_A = (
-    (((0, 0), 0), ((0, 0), 1)),
-    (((0, 0), 0), ((0, 0), 2)),
-    (((0, 0), 0), ((0, 0), 3)),
-    (((0, 0), 0), ((0, 0), 4)),
-    (((0, 0), 0), ((0, 0), 5)),
-    (((0, 0), 0), ((0, 0), 6)),
-)
-BOND_TYPE_B = (
-    (((0, 0), 1), ((0, 0), 2)),
-    (((0, 0), 2), ((0, 0), 3)),
-    (((0, 0), 3), ((0, 0), 4)),
-    (((0, 0), 4), ((0, 0), 5)),
-    (((0, 0), 5), ((0, 0), 6)),
-    (((0, 0), 6), ((0, 0), 1)),
-)
-BOND_TYPE_C = (
-    (((0, 0), 1), ((0, 0), 7)),
-    (((0, 0), 7), ((0, 0), 2)),
-    (((0, 0), 2), ((0, 0), 8)),
-    (((0, 0), 8), ((0, 0), 3)),
-    (((0, 0), 3), ((0, 0), 9)),
-    (((0, 0), 9), ((0, 0), 4)),
-    (((0, 0), 4), ((0, 0), 10)),
-    (((0, 0), 10), ((0, 0), 5)),
-    (((0, 0), 5), ((0, 0), 11)),
-    (((0, 0), 11), ((0, 0), 6)),
-    (((0, 0), 6), ((0, 0), 12)),
-    (((0, 0), 12), ((0, 0), 1)),
-)
-BOND_TYPE_D = (
-    (((0, 0), 9), ((1, 0), 12)),
-    (((0, 0), 10), ((0, 1), 7)),
-    (((0, 0), 11), ((-1, 1), 8)),
-)
-BOND_TYPE_E = (
-    (((0, 0), 8), ((1, 0), 12)),
-    (((0, 0), 9), ((1, 0), 11)),
-    (((0, 0), 9), ((0, 1), 7)),
-    (((0, 0), 10), ((0, 1), 12)),
-    (((0, 0), 10), ((-1, 1), 8)),
-    (((0, 0), 11), ((-1, 1), 7)),
-)
-BOND_TYPE_F = (
-    (((0, 0), 3), ((1, 0), 12)),
-    (((0, 0), 9), ((1, 0), 6)),
-    (((0, 0), 4), ((0, 1), 7)),
-    (((0, 0), 10), ((0, 1), 1)),
-    (((0, 0), 5), ((-1, 1), 8)),
-    (((0, 0), 11), ((-1, 1), 2)),
-)
-
-# Bonds intra and inter the David-Star
-BONDS_INTRA = (BOND_TYPE_A, BOND_TYPE_B, BOND_TYPE_C)
-BONDS_INTER = (BOND_TYPE_D, BOND_TYPE_E, BOND_TYPE_F)
-ALL_BONDS = (
-    BOND_TYPE_A, BOND_TYPE_B, BOND_TYPE_C,
-    BOND_TYPE_D, BOND_TYPE_E, BOND_TYPE_F,
-)
-################################################################################
-
-
-# Generate k-points in the k-space
-def KPath(points, min_num=200, loop=True):
-    """
-    Generating k-points on the path that specified by the given `points`
-
-    If `loop` is set to `False`, the k-path is generated as follow:
-        points[0] ->  ... -> points[i] -> ... -> points[N-1]
-    If `loop` is set to `True`, the k-path is generated as follow:
-        points[0] -> ... -> points[i] -> ... -> points[N-1] -> points[0]
-    The k-points between the given `points` is generated linearly
-
-    Parameters
-    ----------
-    points : 2D array with shape (N, 2) or (N, 3)
-        Special points on the k-path
-        Every row represent the coordinate of a k-point
-        It is assumed that there are no identical adjacent points in the
-        given `points` parameter
-    min_num : int, optional
-        The number of k-point on the shortest k-path segment
-        The number of k-point on other k-path segments are scaled according
-        to their length
-        Default: 200
-    loop : boolean, optional
-        Whether to generate a k-loop or not
-        Default: True
-
-    Returns
-    -------
-    kpoints : 2D array with shape (N, 2) or (N, 3)
-        A collection k-points on the path that specified by the given `points`
-    indices : list
-        The indices of the given `points` in the returned `kpoints` array
-    """
-
-    assert len(points) > 1, "At least two points are required"
-    points = np.concatenate((points, points), axis=0)
-    assert points.ndim == 2 and points.shape[1] in (2, 3)
-    assert isinstance(min_num, int) and min_num >= 1
-
-    point_num = points.shape[0] // 2
-    end = (point_num + 1) if loop else point_num
-    dRs = points[1:end] - points[0:end-1]
-    lengths = np.linalg.norm(dRs, axis=-1)
-
-    min_length = np.min(lengths)
-    if min_length < 1e-4:
-        raise ValueError("Adjacent points are identical!")
-
-    sampling_nums = [
-        int(min_num * length / min_length) for length in lengths
-    ]
-    kpoints = []
-    segment_num = dRs.shape[0]
-    for i in range(segment_num):
-        endpoint = False if i != (segment_num - 1) else True
-        ratios = np.linspace(0, 1, num=sampling_nums[i], endpoint=endpoint)
-        kpoints.append(ratios[:, np.newaxis] * dRs[i] + points[i])
-    kpoints = np.concatenate(kpoints, axis=0)
-    indices = [0, *np.cumsum(sampling_nums)]
-    indices[-1] -= 1
-    return kpoints, indices
 
 
 # Simulation of the Delta function
