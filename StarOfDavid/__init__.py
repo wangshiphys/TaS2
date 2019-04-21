@@ -19,6 +19,14 @@ six types of bonds are t0, t1, t2, t3, t4, t5 respectively.
 """
 
 
+__all__ = [
+    "POINT_TYPE_A", "POINT_TYPE_B", "POINT_TYPE_C",
+    "BOND_TYPE_A", "BOND_TYPE_B", "BOND_TYPE_C",
+    "BOND_TYPE_D", "BOND_TYPE_E", "BOND_TYPE_F",
+    "BONDS_INTRA", "BONDS_INTER", "ALL_BONDS",
+]
+
+
 # Different types of points in the Star-of-David unit-cell
 # The points belong to different types are specified by their indices
 # See also `COORDS_STAR` in the `TaS2DataBase` module for the indices definition
