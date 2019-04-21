@@ -1,16 +1,18 @@
 """
 Construct and solve the Star-of-David Tight-Binding model Hamiltonian
 
-For the definition of the Star-of-David model, see the docstring of the
-`ShowStarOfDavidModel.py` script.
+For the definition of the Star-of-David model, see the document of this
+subpackage.
 """
 
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-from TaS2DataBase import *
+from HamiltonianPy import KPath
 
+from StarOfDavid import *
+from TaS2DataBase import *
 
 LINE_WIDTH = 3
 color_map = plt.get_cmap("tab10")
