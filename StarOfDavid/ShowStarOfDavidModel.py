@@ -1,32 +1,18 @@
 """
 A demonstration of our Star-of-David tight-binding model
 
-The Star-of-David tight-binding model was proposed to simulate the band
-structure of the commensurate charge-density-wave(CCDW) phase of 1T-TaS2. At
-low temperatures, 1T-TaS2 undergoes a commensurate reconstruction into a
-Star-of-David unit cell containing 13 Ta atoms. There are three inequivalent
-types of Ta atoms in the Star-of-David unit cell designated as "A", "B",
-and "C". In this script, the three types of Ta atoms are represented by three
-different COLORS: "blue", "orange" and "green". The Star-of-David unit cell
-are centered on atoms of type "A" and characterized by a shrinkage of the
-"AB", "BC" and "AC" inter-atomic distances by 6.4, 3.2 and 4.28%,
-respectively. The super-lattice has 6-fold rotation symmetry.
-
-After the reconstruction, the original nearest-neighbor bonds are of
-different length, so does the hopping amplitude. There are two kinds of bond
-length within the unit cells and three kinds between the adjacent unit cells.
-We also treat the center Ta atoms specially, so hopping on the "AB" bonds are
-taken to be different from that on the "BB" bonds. The hopping amplitudes for
-six types of bonds are t0, t1, t2, t3, t4, t5 respectively. See also the
-`TaS2DataBase` module for the definition of the different types of bond.
+See also the document of the `StarOfDavid` package for the definition of the
+Star-Of-David tight-binding model
 """
 
+
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-from TaS2DataBase import As_STAR, COORDS_STAR, BONDS_INTRA, BONDS_INTER
-
+from StarOfDavid import BONDS_INTER, BONDS_INTRA
+from TaS2DataBase import As_STAR, COORDS_STAR
 
 color_map = plt.get_cmap("tab10")
 COLORS = color_map(range(color_map.N))
@@ -124,8 +110,11 @@ ax.legend(
 #     transform=ax.transAxes, fontsize=FONT_SIZE
 # )
 
+fig_path = Path("demo/")
+fig_path.mkdir(parents=True, exist_ok=True)
+fig_name = "Star-of-David Tight-Binding Model.jpg"
 ax.set_aspect("equal")
 ax.set_axis_off()
 plt.show()
-fig.savefig("demo/Star-of-David Tight-Binding Model.jpg")
+fig.savefig(fig_path / fig_name)
 plt.close("all")
