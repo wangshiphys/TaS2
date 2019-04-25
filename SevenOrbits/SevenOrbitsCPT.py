@@ -47,7 +47,7 @@ def Mu(dos, omegas, occupied_num=13, total_num=14, reverse=False):
 
 def CPTEB(
         omegas, kpath, numx=1, numy=1, e_num=13,
-        lanczos=False, eta=0.01, **model_params
+        lanczos=False, eta=0.01, save_data=True, **model_params
 ):
     site_num = numx * numy
     state_num_total = site_num * STATE_NUM
@@ -61,15 +61,10 @@ def CPTEB(
         base_vectors((state_num_total, e_num_total + 1)),
     )
 
-    cell = lattice_generator("triangle", num0=1, num1=1)
     cluster = lattice_generator("triangle", num0=numx, num1=numy)
     state_indices_table_cluster = IndexTable(
         StateID(site=site, spin=spin, orbit=orbit)
         for site in cluster.points for orbit in ORBITS for spin in SPINS
-    )
-    row_aoc_indices_table_cell = IndexTable(
-        AoC(CREATION, site=site, spin=spin, orbit=orbit)
-        for site in cell.points for orbit in ORBITS for spin in SPINS
     )
     row_aoc_indices_table_cluster = IndexTable(
         AoC(CREATION, site=site, spin=spin, orbit=orbit)
@@ -102,7 +97,22 @@ def CPTEB(
     )
     ax.grid(axis="x", ls="dashed")
     fig.colorbar(cs, ax=ax)
+    plt.get_current_fig_manager().window.showMaximized()
     plt.show()
+    if save_data:
+        data_path = Path("data/e_num={0},eta={1:.3f}/".format(e_num, eta))
+        fig_path = Path("fig/e_num={0},eta={1:.3f}/".format(e_num, eta))
+        data_path.mkdir(parents=True, exist_ok=True)
+        fig_path.mkdir(parents=True, exist_ok=True)
+        file_name = "EB for " + ",".join(
+            "{0}={1:.3f}".format(key, model_params[key])
+            for key in sorted(model_params)
+        )
+        np.savez(
+            data_path / (file_name + ".npz"),
+            omegas=omegas, spectrums=spectrums
+        )
+        fig.savefig(fig_path / (file_name + ".jpg"), dpi=300)
     plt.close("all")
 
 
@@ -177,13 +187,14 @@ def CPTDOS(
     ax.axvline(muh, ls="dotted", color="gray")
     ax.set_xlim(omegas[0], omegas[-1])
 
+    plt.get_current_fig_manager().window.showMaximized()
     plt.show()
     if save_data:
-        data_path = Path("data/eta={0:.3f}/".format(eta))
-        fig_path = Path("fig/eta={0:.3f}/".format(eta))
+        data_path = Path("data/e_num={0},eta={1:.3f}/".format(e_num, eta))
+        fig_path = Path("fig/e_num={0},eta={1:.3f}/".format(e_num, eta))
         data_path.mkdir(parents=True, exist_ok=True)
         fig_path.mkdir(parents=True, exist_ok=True)
-        file_name = "DOS at " + ",".join(
+        file_name = "DOS for " + ",".join(
             "{0}={1:.3f}".format(key, model_params[key])
             for key in sorted(model_params)
         )
