@@ -38,7 +38,7 @@ class SevenOrbitsTBASolver:
             The number of k-point on other k-path segments are scaled
             according to their length
             default: 100
-        numkx : int, optional
+        numk : int, optional
             Specify the number of k-points along the 1st and 2nd
             translation vectors in the equivalent first Brillouin Zone
             default: numk = 500
@@ -147,6 +147,9 @@ class SevenOrbitsTBASolver:
             Default: 0.01
         model_params : other key-word arguments
             Specifying the tight-binding model parameters
+            Currently recognized keyword arguments are: Muc, tcc, tsc, tss1,
+            tss2, tss3, tss4, tss5, tss6; Other keyword arguments are ignored
+            silently.
 
         Returns
         -------
@@ -180,6 +183,9 @@ class SevenOrbitsTBASolver:
         ----------
         model_params : other key-word arguments
             Specifying the tight-binding model parameters
+            Currently recognized keyword arguments are: Muc, tcc, tsc, tss1,
+            tss2, tss3, tss4, tss5, tss6; Other keyword arguments are ignored
+            silently.
 
         Returns
         -------
@@ -219,15 +225,16 @@ class SevenOrbitsTBASolver:
             Specifying the width of the Lorentzian function
             default: 0.01
         model_params : other key-word arguments
-            Specifying the Seven-Orbits Tight-Binding model parameters
-            The recognizable key-word arguments are:
-                Muc, tsc, tss1, tss2, tss3, tss4, tss5, tss6
+            Specifying the tight-binding model parameters
+            Currently recognized keyword arguments are: Muc, tcc, tsc, tss1,
+            tss2, tss3, tss4, tss5, tss6; Other keyword arguments are ignored
+            silently.
         """
 
         omegas, projected_dos = self.DOS(gamma=gamma, **model_params)
         global_dos = np.sum(projected_dos, axis=-1)
 
-        fig, axes = plt.subplots(1, 3, sharex=True, facecolor="gray")
+        fig, axes = plt.subplots(1, 3, sharex=True)
         line0, = axes[0].plot(omegas, global_dos, color=COLORS[0])
         line1, = axes[0].plot(
             omegas, np.sum(projected_dos[:, 0:2], axis=-1), color=COLORS[1]
@@ -235,8 +242,8 @@ class SevenOrbitsTBASolver:
         line2, = axes[0].plot(
             omegas, np.sum(projected_dos[:, 2:], axis=-1), color=COLORS[2]
         )
-        axes[1].plot(omegas, projected_dos[:, 0], color=COLORS[1])
-        axes[2].plot(omegas, projected_dos[:, 2], color=COLORS[2])
+        axes[1].plot(omegas, projected_dos[:, 0:2])
+        axes[2].plot(omegas, projected_dos[:, 2:])
         axes[0].set_xlim(omegas[0], omegas[-1])
         axes[0].legend(
             [line0, line1, line2], ["DOS", "DOS-C", "DOS-S"], loc="best"
@@ -254,9 +261,10 @@ class SevenOrbitsTBASolver:
             Specifying the width of the Lorentzian function
             default: 0.01
         model_params : other key-word arguments
-            Specifying the Seven-Orbits Tight-Binding model parameters
-            The recognizable key-word arguments are:
-                Muc, tsc, tss1, tss2, tss3, tss4, tss5, tss6
+            Specifying the tight-binding model parameters
+            Currently recognized keyword arguments are: Muc, tcc, tsc, tss1,
+            tss2, tss3, tss4, tss5, tss6; Other keyword arguments are ignored
+            silently.
         """
 
         GE, mu, avg_electron_nums = self.AverageElectronNumber(**model_params)
@@ -270,11 +278,11 @@ class SevenOrbitsTBASolver:
         print("The ground state energy per unit-cell: {0}".format(GE))
         print(msg0.format(np.sum(avg_electron_nums)))
         for orbit in ORBITS:
-            for which, spin in enumerate(["down", "up"]):
+            for which, spin in enumerate(["down", "up  "]):
                 index = orbit * SPIN_NUM + which
                 print(msg1.format(orbit, spin, avg_electron_nums[index]))
 
-        fig, axes = plt.subplots(1, 4, sharey=True, facecolor="gray")
+        fig, axes = plt.subplots(1, 4, sharey=True)
         axes[0].plot(self._GMKGPathEs)
         axes[0].set_xlim(0, len(self._GMKGPathEs) - 1)
         axes[0].set_ylim(omegas[0], omegas[-1])
@@ -284,8 +292,8 @@ class SevenOrbitsTBASolver:
         axes[0].grid(axis="x", ls="dashed")
 
         axes[1].plot(global_dos, omegas)
-        axes[2].plot(projected_dos[:, 0], omegas)
-        axes[3].plot(projected_dos[:, 2], omegas)
+        axes[2].plot(projected_dos[:, 0:2], omegas)
+        axes[3].plot(projected_dos[:, 2:], omegas)
 
         for ax, label in zip(axes, ["EB", "DOS", "DOS-C", "DOS-S"]):
             ax.set_xlabel(label)
@@ -296,9 +304,3 @@ class SevenOrbitsTBASolver:
         )
         plt.show()
         plt.close("all")
-
-
-if __name__ == "__main__":
-    Solver = SevenOrbitsTBASolver(e_num=13, numk=200)
-    Solver.VisualizeDOS()
-    Solver()
