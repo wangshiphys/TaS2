@@ -28,22 +28,30 @@ ORBIT_NUM = len(ORBITS)
 SPIN_NUM = len(SPINS)
 STATE_NUM = ORBIT_NUM * SPIN_NUM
 
-
 # Global variables that describe the hopping and interaction terms
 # The integer numbers are the indices of these orbits
 ONSITE_TERMS = {
+    # The on-site energy difference between the central orbit and the six
+    # surrounding orbits
     "Muc": [(0, 0)],
-    # Hubbard interaction for electrons on the 0th orbit
+    # Hubbard interaction for electrons on the central orbit
     "Uc": [(0, 0)],
-    # Hubbard interaction for electrons on the six extended orbits
+    # Hubbard interaction for electrons on the six surrounding orbits
     "Us": [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6)],
-    # Coulomb interaction for electrons on different orbits
+    # Coulomb interaction between electrons on the central orbit and the six
+    # surrounding orbits
     "Usc": [(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6)],
+    # The hopping terms between the central orbit and the six surrounding orbits
     "tsc": [(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6)],
+    # Three types of intra-cluster hopping terms between the six surrounding
+    # orbits
     "tss1": [(1, 4), (2, 5), (3, 6)],
     "tss3": [(1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 1)],
     "tss5": [(1, 3), (2, 4), (3, 5), (4, 6), (5, 1), (6, 2)],
 }
+
+# Three types of inter-cluster hopping terms between the six surrounding orbits
+# The hopping term is bond dependent
 INTER_TERMS_TSS2 = {
     -180: [(3, 6)], 0  : [(3, 6)],
     -120: [(2, 5)], 60 : [(2, 5)],
@@ -60,6 +68,8 @@ INTER_TERMS_TSS6 = {
     -60 : [(1, 5), (2, 4)], 120: [(1, 5), (2, 4)],
 }
 INTER_TERMS = {
+    # The inter-cluster hopping terms between the central orbits
+    "tcc": [(0, 0)],
     "tss2": INTER_TERMS_TSS2,
     "tss4": INTER_TERMS_TSS4,
     "tss6": INTER_TERMS_TSS6,
@@ -68,17 +78,18 @@ INTER_TERMS = {
 
 # Default model parameters
 DEFAULT_MODEL_PARAMS = {
-    "Muc": 0.212,
-    "Uc": 0.0,
-    "Us": 0.0,
-    "Usc": 0.0,
-    "tsc": 0.162,
-    "tss1": 0.150,
-    "tss2": 0.091,
-    "tss3": 0.072,
-    "tss4": 0.050,
-    "tss5": 0.042,
-    "tss6": 0.042,
+    "Muc" : 0.2120,
+    "Uc"  : 0.0000,
+    "Us"  : 0.0000,
+    "Usc" : 0.0000,
+    "tcc" : 0.0000,
+    "tsc" : 0.1620,
+    "tss1": 0.1500,
+    "tss2": 0.0910,
+    "tss3": 0.0720,
+    "tss4": 0.0500,
+    "tss5": 0.0420,
+    "tss6": 0.0420,
 }
 
 
@@ -92,7 +103,7 @@ def update_parameters(**model_params):
     ----------
     model_params: model parameters
         Currently recognized keyword arguments are:
-          Muc, Uc, Us, Usc, tsc, tss1, tss2, tss3, tss4, tss5, tss6
+            Muc, Uc, Us, Usc, tcc, tsc, tss1, tss2, tss3, tss4, tss5, tss6
 
     Returns
     -------
@@ -136,17 +147,20 @@ def OnSiteInteraction(cluster, **model_params):
     """
     Generate on-site interaction terms
 
-    Current implemented terms:
-      1. The Hubbard interaction for electrons on the 0th orbit |0>;
-      2. The Coulomb interaction between electrons on the 0th orbit and other
-      six orbits;
-      3. The Hubbard interaction for electrons on the six extended orbits;
+    Currently implemented terms:
+      1. The Hubbard interaction for electrons on the central orbit: Uc-term;
+      2. The Hubbard interaction for electrons on the six surrounding orbits:
+      Us-term;
+      3. The Coulomb interaction between electrons on the central orbit and
+      the six surrounding orbits: Usc-term;
 
     Parameters
     ----------
     cluster : Lattice
         The lattice based on which this model is defined
     model_params : Necessary model parameters
+        Currently recognized keyword arguments are: Uc, Us, Usc;
+        Other keyword arguments are ignored silently.
 
     Returns
     -------
@@ -180,18 +194,26 @@ def HoppingTerms(cluster, **model_params):
     """
     Generate hopping terms
 
-    Current implemented terms:
-      1. The on-site chemical potential term on the 0th orbit;
-      2. The on-site hopping terms between the 0th orbit and other six orbits;
-      3. Three types of on-site hopping terms between the six extended orbits;
-      4. Three types of inter-site hopping terms between the six extended
-      orbits.
+    Currently implemented terms:
+      1. The on-site energy difference between the central orbit and the six
+      surrounding orbits: Muc-term;
+      2. The on-site hopping terms between electrons on the central orbit and
+      the six surrounding orbits: tsc-term;
+      3. Three types of on-site hopping terms between the six surrounding
+      orbits: tss1-, tss3-, tss5-term;
+      4. The inter-site hopping terms between electrons on the central orbits:
+      tcc-term;
+      5. Three types of inter-site hopping terms between the six
+      surrounding orbits: tss2-, tss4-, tss6-term;
 
     Parameters
     ----------
     cluster : Lattice
         The lattice based on which this model is defined
     model_params : Necessary model parameters
+        Currently recognized keyword arguments are: Muc, tcc, tsc, tss1,
+        tss2, tss3, tss4, tss5, tss6; Other keyword arguments are ignored
+        silently.
 
     Returns
     -------
@@ -222,7 +244,7 @@ def HoppingTerms(cluster, **model_params):
     bulk_bonds, boundary_bonds = cluster.bonds(nth=1)
     containers = [hopping_terms_intra, hopping_terms_inter]
     all_bonds = [bulk_bonds, boundary_bonds]
-    for key in ["tss2", "tss4", "tss6"]:
+    for key in ["tcc", "tss2", "tss4", "tss6"]:
         coeff = model_params[key]
         if coeff == 0.0:
             continue
@@ -230,7 +252,10 @@ def HoppingTerms(cluster, **model_params):
         for container, bonds in zip(containers, all_bonds):
             for bond in bonds:
                 p0, p1 = bond.getEndpoints()
-                orbital_pairs = INTER_TERMS[key][bond.getAzimuth(ndigits=0)]
+                if key == "tcc":
+                    orbital_pairs = INTER_TERMS[key]
+                else:
+                    orbital_pairs = INTER_TERMS[key][bond.getAzimuth(ndigits=0)]
                 for spin in SPINS:
                     for orbit0, orbit1 in orbital_pairs:
                         C = AoC(CREATION, site=p0, spin=spin, orbit=orbit0)
@@ -243,7 +268,7 @@ def HTermGenerator(cluster, **model_params):
     """
     Generate terms of the model Hamiltonian
 
-    Current implemented terms:
+    Currently implemented terms:
       See the documents of the `OnSiteInteraction` and `HoppingTerms`
 
     Parameters
@@ -251,6 +276,9 @@ def HTermGenerator(cluster, **model_params):
     cluster : Lattice
         The lattice based on which this model is defined
     model_params : Necessary model parameters
+        Currently recognized keyword arguments are: Muc, tcc, tsc, tss1,
+        tss2, tss3, tss4, tss5, tss6, Uc, Us, Usc; Other keyword arguments are
+        ignored silently.
 
     Returns
     -------
@@ -269,10 +297,65 @@ def HTermGenerator(cluster, **model_params):
 
 if __name__ == "__main__":
     from HamiltonianPy import lattice_generator
-    cluster = lattice_generator("triangle", num0=2, num1=2)
-    interactions, intra, inter = HTermGenerator(
-        cluster, Uc=1.0, Us=0.7, Usc=0.5
-    )
-    assert len(interactions) == 100 + 6 * 4
-    assert len(intra) == 216
-    assert len(inter) == 56
+
+    numx = 2
+    numy = 2
+    site_num = numx * numy
+    cluster = lattice_generator("triangle", num0=numx, num1=numy)
+
+    Uc_num = site_num
+    Us_num = 6 * site_num
+    Usc_num = 4 * 6 * site_num
+
+    Muc_num = SPIN_NUM * site_num
+    tsc_num = 6 * SPIN_NUM * site_num
+    tss1_num = 3 * SPIN_NUM * site_num
+    tss3_num = 6 * SPIN_NUM * site_num
+    tss5_num = 6 * SPIN_NUM * site_num
+
+    tcc_intra_num = 5 * 2
+    tcc_inter_num = 7 * 2
+    tss2_intra_num = (2 * 1 + 2 * 1 + 1 * 1) * SPIN_NUM
+    tss2_inter_num = (2 * 1 + 2 * 1 + 3 * 1) * SPIN_NUM
+    tss4_intra_num = (2 * 1 + 2 * 1 + 1 * 1) * SPIN_NUM
+    tss4_inter_num = (2 * 1 + 2 * 1 + 3 * 1) * SPIN_NUM
+    tss6_intra_num = (2 * 2 + 2 * 2 + 1 * 2) * SPIN_NUM
+    tss6_inter_num = (2 * 2 + 2 * 2 + 3 * 2) * SPIN_NUM
+
+    assert len(OnSiteInteraction(cluster, Uc=1.0, Us=0.0, Usc=0.0)) == Uc_num
+    assert len(OnSiteInteraction(cluster, Uc=0.0, Us=1.0, Usc=0.0)) == Us_num
+    assert len(OnSiteInteraction(cluster, Uc=0.0, Us=0.0, Usc=1.0)) == Usc_num
+
+    model_params = {
+        "Muc" : 0.0,
+        "Uc"  : 0.0,
+        "Us"  : 0.0,
+        "Usc" : 0.0,
+        "tcc" : 0.0,
+        "tsc" : 0.0,
+        "tss1": 0.0,
+        "tss2": 0.0,
+        "tss3": 0.0,
+        "tss4": 0.0,
+        "tss5": 0.0,
+        "tss6": 0.0,
+    }
+
+    for num, key in zip(
+        [Muc_num, tsc_num, tss1_num, tss3_num, tss5_num],
+        ["Muc", "tsc", "tss1", "tss3", "tss5"]
+    ):
+        new_model_params = dict(model_params)
+        new_model_params[key] = 1.0
+        intra_terms, inter_terms = HoppingTerms(cluster, **new_model_params)
+        assert len(intra_terms) == num and len(inter_terms) == 0
+
+    for num_intra, num_inter, key in zip(
+        [tcc_intra_num, tss2_intra_num, tss4_intra_num, tss6_intra_num],
+        [tcc_inter_num, tss2_inter_num, tss4_inter_num, tss6_inter_num],
+        ["tcc", "tss2", "tss4", "tss6"]
+    ):
+        new_model_params = dict(model_params)
+        new_model_params[key] = 1.0
+        intra_terms, inter_terms = HoppingTerms(cluster, **new_model_params)
+        assert len(intra_terms) == num_intra and len(inter_terms) == num_inter
