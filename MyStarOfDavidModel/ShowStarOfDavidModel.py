@@ -1,8 +1,8 @@
 """
-A demonstration of our Star-of-David tight-binding model
+A demonstration of our Star-of-David tight-binding model.
 
-See also the document of the `StarOfDavid` package for the definition of the
-Star-Of-David tight-binding model
+See also the document of the `MyStarOfDavidModel` sub-package for the
+definition of the Star-Of-David tight-binding model.
 """
 
 
@@ -11,7 +11,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
-from StarOfDavid import BONDS_INTER, BONDS_INTRA
+from MyStarOfDavidModel import BONDS_INTER, BONDS_INTRA
 from TaS2DataBase import As_STAR, COORDS_STAR
 
 color_map = plt.get_cmap("tab10")
