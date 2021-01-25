@@ -1,6 +1,6 @@
 """
 The Star-of-David tight-binding model was proposed to simulate the band
-structure of the commensurate charge-density-wave(CCDW) phase of 1T-TaS2. At
+structure of the commensurate charge-density-wave (CCDW) phase of 1T-TaS2. At
 low temperatures, 1T-TaS2 undergoes a commensurate reconstruction into a
 Star-of-David unit-cell containing 13 Ta atoms. There are three inequivalent
 types of Ta atoms in the Star-of-David unit-cell designated as "A", "B",
