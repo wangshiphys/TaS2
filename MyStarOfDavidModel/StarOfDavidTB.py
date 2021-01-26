@@ -1,5 +1,5 @@
 """
-Construct and solve the Star-of-David Tight-Binding model Hamiltonian
+Construct and solve the Star-of-David Tight-Binding model Hamiltonian.
 
 For the definition of the Star-of-David model, see the document of this
 subpackage.
@@ -8,13 +8,12 @@ subpackage.
 
 import matplotlib.pyplot as plt
 import numpy as np
-
 from HamiltonianPy import KPath
 
-from StarOfDavid import *
+from MyStarOfDavidModel import *
 from TaS2DataBase import *
 
-LINE_WIDTH = 3
+LINE_WIDTH = 6
 color_map = plt.get_cmap("tab10")
 COLORS = color_map(range(color_map.N))
 
@@ -220,27 +219,40 @@ class StarOfDavidTBSolver(BaseTBSolver):
             print(msg1.format(index, avg_electron_num))
 
         fig, axes = plt.subplots(1, 5, sharey=True)
-        axes[0].plot(self._GMKGPathEs, lw=LINE_WIDTH)
+        axes[0].plot(self._GMKGPathEs, lw=LINE_WIDTH, zorder=2)
         axes[0].set_xlim(0, len(self._GMKGPathEs) - 1)
         axes[0].set_ylim(omegas[0], omegas[-1])
         axes[0].set_xticks(self._GMKGIndices)
-        axes[0].set_xticklabels(self._GMKGLabels)
-        axes[0].set_ylabel(r"$E$", rotation="horizontal")
-        axes[0].grid(axis="x", ls="dashed", lw=LINE_WIDTH/4)
+        axes[0].set_xticklabels(self._GMKGLabels, fontsize=30)
+        axes[0].set_ylabel(r"$E$", rotation="horizontal", fontsize=30)
+        axes[0].tick_params(axis="both", labelsize=30)
+        axes[0].grid(axis="x", ls="dashed", lw=LINE_WIDTH/4, zorder=0)
 
         axes[1].plot(global_dos, omegas, lw=LINE_WIDTH)
-        axes[2].plot(projected_dos[:, 0], omegas, lw=LINE_WIDTH)
-        axes[3].plot(projected_dos[:, 1], omegas, lw=LINE_WIDTH)
-        axes[4].plot(projected_dos[:, 7], omegas, lw=LINE_WIDTH)
+        axes[2].plot(projected_dos[:, 0], omegas, lw=LINE_WIDTH, zorder=2)
+        axes[3].plot(projected_dos[:, 1], omegas, lw=LINE_WIDTH, zorder=2)
+        axes[4].plot(projected_dos[:, 7], omegas, lw=LINE_WIDTH, zorder=2)
+        axes[1].tick_params(axis="x", labelsize=30)
+        axes[2].tick_params(axis="x", labelsize=30)
+        axes[3].tick_params(axis="x", labelsize=30)
+        axes[4].tick_params(axis="x", labelsize=30)
 
-        for ax, label in zip(axes, ["EB", "DOS", "LDOS-A", "LDOS-B", "LDOS-C"]):
-            ax.axhline(mu, ls="dashed", lw=LINE_WIDTH/2, color="gray")
-            ax.set_xlabel(label)
-        # axes[2].text(
-        #     0.5, 0.55, "$E_F={0:.3f}$".format(mu),
-        #     ha="center", va="center",
-        #     transform=axes[2].transAxes,
-        # )
+        for ax, label, tag in zip(
+                axes, ["EB", "DOS", "LDOS-A", "LDOS-B", "LDOS-C"],
+                ["(a)", "(b)", "(c)", "(d)", "(e)"]
+        ):
+            ax.axhline(mu, ls="dashed", lw=LINE_WIDTH/2, color="gray", zorder=1)
+            ax.set_xlabel(label, fontsize=30)
+            ax.text(
+                0.98, 0.98, tag, fontsize=30,
+                ha="right", va="top", transform=ax.transAxes
+            )
+
+        axes[2].text(
+            0.5, 0.55, "$E_F={0:.3f}$".format(mu),
+            ha="center", va="center", color="tab:red",
+            transform=axes[2].transAxes, fontsize=35,
+        )
 
         plt.show()
         plt.close("all")
@@ -258,7 +270,7 @@ if __name__ == "__main__":
         "mu1": -0.6,
         "mu2": -0.1,
     }
-    Solver = StarOfDavidTBSolver(e_num=6, numkx=1)
+    Solver = StarOfDavidTBSolver(e_num=6, numkx=200)
     Solver.Verify()
     Solver.VisualizeDOS(**model_params)
     Solver()
