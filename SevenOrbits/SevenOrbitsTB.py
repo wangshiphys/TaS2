@@ -1,5 +1,5 @@
 """
-Solving and demonstrating the Seven-Orbits Tight-Binding model Hamiltonian
+Solving and demonstrating the Seven-Orbits Tight-Binding model Hamiltonian.
 """
 
 
@@ -16,7 +16,7 @@ COLORS = color_map(range(color_map.N))
 
 class SevenOrbitsTBASolver:
     """
-    Solving and demonstrating the Seven-Orbits Tight-Binding model Hamiltonian
+    Solving and demonstrating the Seven-Orbits Tight-Binding model Hamiltonian.
     """
 
     def __init__(self, e_num=13, min_num=100, numk=500):
@@ -234,7 +234,7 @@ class SevenOrbitsTBASolver:
         omegas, projected_dos = self.DOS(gamma=gamma, **model_params)
         global_dos = np.sum(projected_dos, axis=-1)
 
-        fig, axes = plt.subplots(1, 3, sharex=True)
+        fig, axes = plt.subplots(1, 3, sharex="all")
         line0, = axes[0].plot(omegas, global_dos, color=COLORS[0])
         line1, = axes[0].plot(
             omegas, np.sum(projected_dos[:, 0:2], axis=-1), color=COLORS[1]
@@ -282,7 +282,18 @@ class SevenOrbitsTBASolver:
                 index = orbit * SPIN_NUM + which
                 print(msg1.format(orbit, spin, avg_electron_nums[index]))
 
-        fig, axes = plt.subplots(1, 4, sharey=True)
+        file_name = "None Interacting Information for " + ",".join(
+            "{0}={1:.3f}".format(key, model_params[key])
+            for key in sorted(model_params)
+        ) + ".npz"
+        np.savez(
+            file_name,
+            GE=[GE], mu=[mu], omegas=omegas, dos=projected_dos,
+            GMKGIndices=self._GMKGIndices, GMKGPathEs=self._GMKGPathEs,
+            avg_electron_nums=avg_electron_nums,
+        )
+
+        fig, axes = plt.subplots(1, 4, sharey="all")
         axes[0].plot(self._GMKGPathEs)
         axes[0].set_xlim(0, len(self._GMKGPathEs) - 1)
         axes[0].set_ylim(omegas[0], omegas[-1])
@@ -304,3 +315,9 @@ class SevenOrbitsTBASolver:
         )
         plt.show()
         plt.close("all")
+
+
+if __name__ == "__main__":
+    solver = SevenOrbitsTBASolver(e_num=11, numk=500, min_num=200)
+    solver(Muc=0.100, Uc=0.700, tsc=0.100)
+    solver(Muc=0.350, Uc=0.700, tsc=0.100)
