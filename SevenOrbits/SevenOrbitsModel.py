@@ -53,19 +53,19 @@ ONSITE_TERMS = {
 # Three types of inter-cluster hopping terms between the six surrounding orbits
 # The hopping term is bond dependent
 INTER_TERMS_TSS2 = {
-    -180: [(3, 6)], 0  : [(3, 6)],
+    -60: [(1, 4)], 120: [(1, 4)],
     -120: [(2, 5)], 60 : [(2, 5)],
-    -60 : [(1, 4)], 120: [(1, 4)],
+    -180: [(3, 6)], 0: [(3, 6)], 180: [(3, 6)],
 }
 INTER_TERMS_TSS4 = {
-    -180: [(1, 4)], 0  : [(1, 4)],
+    -60: [(5, 2)], 120: [(5, 2)],
     -120: [(6, 3)], 60 : [(6, 3)],
-    -60 : [(5, 2)], 120: [(5, 2)],
+    -180: [(1, 4)], 0: [(1, 4)], 180: [(1, 4)],
 }
 INTER_TERMS_TSS6 = {
-    -180: [(3, 1), (4, 6)], 0  : [(3, 1), (4, 6)],
+    -60: [(1, 5), (2, 4)], 120: [(1, 5), (2, 4)],
     -120: [(2, 6), (3, 5)], 60 : [(2, 6), (3, 5)],
-    -60 : [(1, 5), (2, 4)], 120: [(1, 5), (2, 4)],
+    -180: [(3, 1), (4, 6)], 0: [(3, 1), (4, 6)], 180: [(3, 1), (4, 6)],
 }
 INTER_TERMS = {
     # The inter-cluster hopping terms between the central orbits
@@ -251,7 +251,7 @@ def HoppingTerms(cluster, **model_params):
 
         for container, bonds in zip(containers, all_bonds):
             for bond in bonds:
-                p0, p1 = bond.getEndpoints()
+                p0, p1 = bond.endpoints
                 if key == "tcc":
                     orbital_pairs = INTER_TERMS[key]
                 else:
