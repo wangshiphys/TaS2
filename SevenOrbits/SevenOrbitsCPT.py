@@ -1,5 +1,5 @@
 """
-Solve the Seven-Orbits Hubbard model based on cluster perturbation theory(CPT)
+Solve the Seven-Orbits Hubbard model based on cluster perturbation theory(CPT).
 """
 
 
@@ -46,7 +46,7 @@ def Mu(dos, omegas, occupied_num=13, total_num=14, reverse=False):
 
 
 def CPTEB(
-        omegas, kpath, numx=1, numy=1, e_num=13,
+        omegas, kpath, xticks, numx=1, numy=1, e_num=13,
         lanczos=False, eta=0.01, save_data=True, **model_params
 ):
     site_num = numx * numy
@@ -95,6 +95,9 @@ def CPTEB(
     cs = ax.contourf(
         range(len(kpath)), omegas, spectrums, levels=200, cmap="hot"
     )
+    labels = (r"$\Gamma$", r"$M$", r"$K$", r"$\Gamma$")
+    ax.set_xticks(xticks)
+    ax.set_xticklabels(labels)
     ax.grid(axis="x", ls="dashed")
     fig.colorbar(cs, ax=ax)
     plt.get_current_fig_manager().window.showMaximized()
@@ -201,3 +204,32 @@ def CPTDOS(
         np.savez(data_path / (file_name + ".npz"), omegas=omegas, dos=dos)
         fig.savefig(fig_path / (file_name + ".jpg"), dpi=300)
     plt.close("all")
+
+
+if __name__ == "__main__":
+    from TaS2DataBase import Gamma, Ms_CELL, Ks_CELL
+    # from itertools import product
+    # from time import strftime, time
+    # time_fmt = "%Y-%m-%d %H:%M:%S"
+    # log = "{0}: tcc={1:.3f},tsc={2:.3f}, dt={3}s"
+    #
+    # Muc = 0.200
+    # Uc  = 0.500
+    # # tccs = np.arange(-0.1, 0.11, 0.01)
+    # # tscs = np.arange(0.0, 0.11, 0.01)
+    # tccs = [0.005]
+    # tscs = [0.01, 0.05]
+    # omegas = np.linspace(-0.5, 1.5, 400)
+    # for tcc, tsc in product(tccs, tscs):
+    #     t0 = time()
+    #     CPTDOS(omegas, e_num=11, Muc=Muc, Uc=Uc, tcc=tcc, tsc=tsc)
+    #     t1 = time()
+    #     print(log.format(strftime(time_fmt), tcc, tsc, t1 - t0))
+    #     print("=" * 80)
+
+    e_num = 13
+    params = dict(Muc=0.200, Uc=0.500, tsc=0.010)
+    omegas = np.linspace(-0.4, 0.8, 600)
+    GMKGPath, xticks = KPath([Gamma, Ms_CELL[0], Ks_CELL[0]], min_num=200)
+    # CPTEB(omegas, GMKGPath, xticks, e_num=e_num, **params)
+    CPTDOS(omegas, e_num=e_num, **params)
