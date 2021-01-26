@@ -1,0 +1,71 @@
+\begin{thebibliography}{6}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\expandafter\ifx\csname bibnamefont\endcsname\relax
+  \def\bibnamefont#1{#1}\fi
+\expandafter\ifx\csname bibfnamefont\endcsname\relax
+  \def\bibfnamefont#1{#1}\fi
+\expandafter\ifx\csname citenamefont\endcsname\relax
+  \def\citenamefont#1{#1}\fi
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\providecommand{\bibinfo}[2]{#2}
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{\citenamefont{Eskes et~al.}(1991)\citenamefont{Eskes, Meinders, and
+  Sawatzky}}]{PhysRevLett.67.1035}
+\bibinfo{author}{\bibfnamefont{H.}~\bibnamefont{Eskes}},
+  \bibinfo{author}{\bibfnamefont{M.~B.~J.} \bibnamefont{Meinders}},
+  \bibnamefont{and} \bibinfo{author}{\bibfnamefont{G.~A.}
+  \bibnamefont{Sawatzky}}, \bibinfo{journal}{Phys. Rev. Lett.}
+  \textbf{\bibinfo{volume}{67}}, \bibinfo{pages}{1035} (\bibinfo{year}{1991}),
+  \urlprefix\url{https://link.aps.org/doi/10.1103/PhysRevLett.67.1035}.
+
+\bibitem[{\citenamefont{Meinders et~al.}(1993)\citenamefont{Meinders, Eskes,
+  and Sawatzky}}]{PhysRevB.48.3916}
+\bibinfo{author}{\bibfnamefont{M.~B.~J.} \bibnamefont{Meinders}},
+  \bibinfo{author}{\bibfnamefont{H.}~\bibnamefont{Eskes}}, \bibnamefont{and}
+  \bibinfo{author}{\bibfnamefont{G.~A.} \bibnamefont{Sawatzky}},
+  \bibinfo{journal}{Phys. Rev. B} \textbf{\bibinfo{volume}{48}},
+  \bibinfo{pages}{3916} (\bibinfo{year}{1993}),
+  \urlprefix\url{https://link.aps.org/doi/10.1103/PhysRevB.48.3916}.
+
+\bibitem[{\citenamefont{Feiner}(1993)}]{PhysRevB.48.16857}
+\bibinfo{author}{\bibfnamefont{L.~F.} \bibnamefont{Feiner}},
+  \bibinfo{journal}{Phys. Rev. B} \textbf{\bibinfo{volume}{48}},
+  \bibinfo{pages}{16857} (\bibinfo{year}{1993}),
+  \urlprefix\url{https://link.aps.org/doi/10.1103/PhysRevB.48.16857}.
+
+\bibitem[{\citenamefont{Qiao et~al.}(2017)\citenamefont{Qiao, Li, Wang, Ruan,
+  Ye, Cai, Hao, Yao, Chen, Wu et~al.}}]{PhysRevX.7.041054}
+\bibinfo{author}{\bibfnamefont{S.}~\bibnamefont{Qiao}},
+  \bibinfo{author}{\bibfnamefont{X.}~\bibnamefont{Li}},
+  \bibinfo{author}{\bibfnamefont{N.}~\bibnamefont{Wang}},
+  \bibinfo{author}{\bibfnamefont{W.}~\bibnamefont{Ruan}},
+  \bibinfo{author}{\bibfnamefont{C.}~\bibnamefont{Ye}},
+  \bibinfo{author}{\bibfnamefont{P.}~\bibnamefont{Cai}},
+  \bibinfo{author}{\bibfnamefont{Z.}~\bibnamefont{Hao}},
+  \bibinfo{author}{\bibfnamefont{H.}~\bibnamefont{Yao}},
+  \bibinfo{author}{\bibfnamefont{X.}~\bibnamefont{Chen}},
+  \bibinfo{author}{\bibfnamefont{J.}~\bibnamefont{Wu}}, \bibnamefont{et~al.},
+  \bibinfo{journal}{Phys. Rev. X} \textbf{\bibinfo{volume}{7}},
+  \bibinfo{pages}{041054} (\bibinfo{year}{2017}),
+  \urlprefix\url{https://link.aps.org/doi/10.1103/PhysRevX.7.041054}.
+
+\bibitem[{\citenamefont{S\'en\'echal et~al.}(2000)\citenamefont{S\'en\'echal,
+  Perez, and Pioro-Ladri\`ere}}]{PhysRevLett.84.522}
+\bibinfo{author}{\bibfnamefont{D.}~\bibnamefont{S\'en\'echal}},
+  \bibinfo{author}{\bibfnamefont{D.}~\bibnamefont{Perez}}, \bibnamefont{and}
+  \bibinfo{author}{\bibfnamefont{M.}~\bibnamefont{Pioro-Ladri\`ere}},
+  \bibinfo{journal}{Phys. Rev. Lett.} \textbf{\bibinfo{volume}{84}},
+  \bibinfo{pages}{522} (\bibinfo{year}{2000}),
+  \urlprefix\url{https://link.aps.org/doi/10.1103/PhysRevLett.84.522}.
+
+\bibitem[{\citenamefont{Gros and Valent\'{\i}}(1993)}]{PhysRevB.48.418}
+\bibinfo{author}{\bibfnamefont{C.}~\bibnamefont{Gros}} \bibnamefont{and}
+  \bibinfo{author}{\bibfnamefont{R.}~\bibnamefont{Valent\'{\i}}},
+  \bibinfo{journal}{Phys. Rev. B} \textbf{\bibinfo{volume}{48}},
+  \bibinfo{pages}{418} (\bibinfo{year}{1993}),
+  \urlprefix\url{https://link.aps.org/doi/10.1103/PhysRevB.48.418}.
+
+\end{thebibliography}
